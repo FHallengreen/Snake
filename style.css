@@ -1,0 +1,35 @@
+body {
+    background-color: #282828;
+    color: #6b6;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .game-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; 
+  }
+  
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(30, max-content);
+    width: fit-content;
+    border-radius: 5px;
+  }
+  
+  .cell {
+    width: 32px;
+    aspect-ratio: 1 / 1;
+    background-color: #3c5b7c;
+    border-right: 1px dashed #282828;
+    border-bottom: 1px dashed #282828;
+  }
+  
+  .player {
+    background-color: rgb(98, 233, 58);
+  }
+  
+  .goal {
+    background-color: rgb(201, 204, 0);
+  }
+  
