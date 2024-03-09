@@ -17,7 +17,7 @@ function start() {
   document.addEventListener("keydown", keyPress);
   document.addEventListener("keyup", keyUp);
   queue.enqueue({ row: head.row, col: head.col });
-  queue.enqueue({ row: head.row, col: head.col +1});
+  queue.enqueue({ row: head.row, col: head.col + 1});
   queue.enqueue({ row: head.row, col: head.col  });
   spawnGoalAfterRandomDelay();
   tick();
@@ -25,9 +25,11 @@ function start() {
 
 /**
  * Function that runs the game.
- * Sets a timeout for the tick function and sets the direction of the snake depending on which key is pressed.
- * Also sets the head of the snake to the new position and enqueues the new position.
- * Finally it writes to the cell and displays the board.
+ * The function sets a timeout for the tick function to run every 100ms.
+ * The function also checks which direction the snake is moving and updates the head position accordingly.
+ * The function also checks if the snake is eating the goal, and if it is, the score is updated and the goal is removed.
+ * The function also checks if the snake hits itself, and if it does, the game is over.
+ * The function also updates the score and displays the board.
  */
 function tick() {
   setTimeout(tick, 100);
@@ -48,25 +50,25 @@ function tick() {
     case "left":
       head.col--;
       if (head.col < 0) {
-        head.col = columns - 1;
+        gameOver();
       }
       break;
     case "right":
       head.col++;
       if (head.col >= columns) {
-        head.col = 0;
+        gameOver();
       }
       break;
     case "up":
       head.row--;
       if (head.row < 0) {
-        head.row = rows - 1;
+        gameOver();
       }
       break;
     case "down":
       head.row++;
       if (head.row >= rows) {
-        head.row = 0;
+        gameOver();
       }
       break;
   }
@@ -86,6 +88,14 @@ function tick() {
   displayBoard();
 }
 
+/**
+ * Function that spawns a goal after a random delay.
+ * The goal is spawned in a random position on the board.
+ * The function also checks if the goal is spawned on the snake, and if it is, it spawns a new goal.
+ * If the goal is not spawned on the snake, it is written to the cell and displayed on the board.
+ * The goal is then set to the new goal.
+ * @returns the new goal.
+ */
 function spawnGoalAfterRandomDelay() {
   const minDelay = 1000;
   const maxDelay = 5000;
@@ -103,6 +113,11 @@ function spawnGoalAfterRandomDelay() {
   }, delay);
 }
 
+/**
+ * Function that checks if a cell is occupied by the snake.
+ * @param {*} row - row to check
+ * @param {*} col - column to check
+ */
 function isCellOccupiedBySnake(row, col) {
   let occupied = false;
   queue.traverse(segment => {
@@ -113,6 +128,36 @@ function isCellOccupiedBySnake(row, col) {
   return occupied;
 }
 
+/**
+ * Function that runs when the game is over.
+ * The direction is set to an empty string and the modalYouLost function is called.
+ */
+function gameOver(){
+  direction ="";
+  modalYouLost();
+}
+
+/**
+ * Function that displays a modal when the game is over.
+ * The modal displays the score and a button to restart the game.
+ */
+function modalYouLost(){
+  const modal = document.getElementById("modal");
+  modal.style.display = "block";
+  const modalText = document.getElementById("modalText");
+  modalText.textContent = "You lost! Your score was: " + score;
+  const modalButton = document.getElementById("modalButton");
+  modalButton.addEventListener("click", () => {
+    location.reload();
+  });
+  modalButton.focus();
+};
+
+/**
+ * Function that checks if the snake is eating the goal.
+ * If it is, the goal is removed and a new goal is spawned after a random delay.
+ * @returns true if the snake is eating the goal, false if not.
+ */
 function snakeEatingGoal() {
   if (head.row === goal.row && head.col === goal.col) {
     console.log("Snake is eating goal");
@@ -133,12 +178,15 @@ function updateScore() {
 
 }
 
+/**
+ * Function that checks if the snake hits itself.
+ * If it does, the game is over and the score is displayed in an alert.
+ * The page is then reloaded.
+ */
 function checkIfSnakeHitsItself() {
   queue.traverse(segment => {
     if (segment.row === head.row && segment.col === head.col) {
-      direction ="";
-      alert("Game over! You hit yourself! Your score was: " + score);
-      window.location.reload();
+      gameOver();
     }
   }
   )
