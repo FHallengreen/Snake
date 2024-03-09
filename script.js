@@ -138,22 +138,6 @@ function gameOver(){
 }
 
 /**
- * Function that displays a modal when the game is over.
- * The modal displays the score and a button to restart the game.
- */
-function modalYouLost(){
-  const modal = document.getElementById("modal");
-  modal.style.display = "block";
-  const modalText = document.getElementById("modalText");
-  modalText.textContent = "You lost! Your score was: " + score;
-  const modalButton = document.getElementById("modalButton");
-  modalButton.addEventListener("click", () => {
-    location.reload();
-  });
-  modalButton.focus();
-};
-
-/**
  * Function that checks if the snake is eating the goal.
  * If it is, the goal is removed and a new goal is spawned after a random delay.
  * @returns true if the snake is eating the goal, false if not.
@@ -285,7 +269,21 @@ let head = { row: 7, col: 16 };
 
 // ******** VIEW ********
 
-
+/**
+ * Function that displays a modal when the game is over.
+ * The modal displays the score and a button to restart the game.
+ */
+function modalYouLost(){
+  const modal = document.getElementById("modal");
+  modal.style.display = "block";
+  const modalText = document.getElementById("modalText");
+  modalText.textContent = "You lost! Your score was: " + score;
+  const modalButton = document.getElementById("modalButton");
+  modalButton.addEventListener("click", () => {
+    location.reload();
+  });
+  modalButton.focus();
+};
 
 /**
  * Creates a grid in the view.
@@ -301,6 +299,7 @@ function createGrid() {
 
 /**
  * Displays the board in the view.
+ * The function removes the player and goal classes from the cells and then adds them to the new positions.
  */
 function displayBoard() {
   const cells = document.querySelectorAll("#grid .cell");
